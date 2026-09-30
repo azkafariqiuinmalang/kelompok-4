@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import joblib
 
+
 # =========================================================
 # PAGE CONFIG
 # =========================================================
@@ -12,223 +13,253 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+
 # =========================================================
 # CUSTOM CSS
 # =========================================================
-st.markdown("""
+st.markdown(
+    """
 <style>
-
-/* ==============================
+/* =========================
    GLOBAL
-============================== */
+========================= */
+
 .stApp {
-    background: #f5f7fb;
+    background-color: #f5f7fb;
 }
 
 .block-container {
-    max-width: 1120px;
-    padding-top: 2rem;
+    max-width: 1180px;
+    padding-top: 1.5rem;
     padding-bottom: 3rem;
 }
 
-/* ==============================
-   HEADER
-============================== */
+/* =========================
+   HERO
+========================= */
+
 .hero {
-    background: linear-gradient(135deg, #1e4f7a, #3479b9);
-    padding: 34px 40px;
-    border-radius: 0 0 24px 24px;
-    margin-bottom: 28px;
-    box-shadow: 0 12px 30px rgba(30, 79, 122, 0.15);
+    background: linear-gradient(135deg, #1f5c8f 0%, #347fbd 100%);
+    padding: 38px 42px;
+    border-radius: 0 0 26px 26px;
+    margin-bottom: 30px;
+    box-shadow: 0 12px 30px rgba(31, 92, 143, 0.16);
 }
 
 .hero-title {
-    color: white !important;
+    color: #ffffff !important;
     font-size: 38px;
+    line-height: 1.2;
     font-weight: 800;
-    margin-bottom: 8px;
+    margin: 0 0 12px 0;
 }
 
 .hero-description {
-    color: #eaf4ff !important;
+    color: #edf7ff !important;
     font-size: 16px;
+    line-height: 1.6;
     margin: 0;
 }
 
-/* ==============================
-   INFORMATION CARDS
-============================== */
+/* =========================
+   INFO CARDS
+========================= */
+
 .info-card {
-    background: white;
+    background: #ffffff;
     padding: 22px 24px;
-    border-radius: 16px;
-    border: 1px solid #e4e8ef;
-    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.045);
-    min-height: 115px;
+    border-radius: 18px;
+    border: 1px solid #e1e7ef;
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05);
+    min-height: 110px;
 }
 
 .info-label {
-    font-size: 14px;
     color: #64748b !important;
-    margin-bottom: 8px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
 }
 
 .info-value {
-    font-size: 27px;
     color: #172033 !important;
-    font-weight: 700;
+    font-size: 27px;
+    font-weight: 750;
+    line-height: 1.2;
 }
 
-/* ==============================
+/* =========================
    SECTION
-============================== */
+========================= */
+
 .section-title {
     color: #172033 !important;
-    font-size: 24px;
-    font-weight: 750;
-    margin-top: 22px;
-    margin-bottom: 4px;
+    font-size: 26px;
+    line-height: 1.3;
+    font-weight: 800;
+    margin-top: 30px;
+    margin-bottom: 7px;
 }
 
 .section-description {
-    color: #697386 !important;
+    color: #64748b !important;
     font-size: 15px;
     margin-bottom: 22px;
 }
 
-/* ==============================
-   WIDGET LABEL
-============================== */
-label[data-testid="stWidgetLabel"] p {
-    color: #253247 !important;
-    font-weight: 650 !important;
-    font-size: 15px !important;
-}
+/* =========================
+   FORM
+========================= */
 
-[data-testid="stSlider"] p {
-    color: #253247 !important;
-}
-
-/* Slider value */
-[data-testid="stSlider"] [data-testid="stThumbValue"] {
-    color: #2468a2 !important;
-}
-
-/* ==============================
-   INPUT CONTAINER
-============================== */
 [data-testid="stForm"] {
-    background: white;
-    padding: 26px 28px;
-    border-radius: 20px;
-    border: 1px solid #e3e8ef;
-    box-shadow: 0 7px 22px rgba(0, 0, 0, 0.045);
+    background-color: #ffffff;
+    border: 1px solid #e1e7ef;
+    border-radius: 22px;
+    padding: 25px 30px 30px 30px;
+    box-shadow: 0 7px 24px rgba(15, 23, 42, 0.05);
 }
 
-/* ==============================
+/* Widget labels */
+label[data-testid="stWidgetLabel"] p {
+    color: #172033 !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+}
+
+/* Slider numbers */
+[data-testid="stSlider"] p {
+    color: #172033 !important;
+}
+
+/* =========================
    BUTTON
-============================== */
-div[data-testid="stFormSubmitButton"] > button {
+========================= */
+
+div[data-testid="stFormSubmitButton"] button {
     width: 100%;
-    min-height: 52px;
-    background: linear-gradient(135deg, #1e5f99, #2e7dbe);
-    color: white !important;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 700;
-    transition: 0.2s;
+    min-height: 54px;
+    border: none !important;
+    border-radius: 13px !important;
+    background: linear-gradient(90deg, #2368a2, #347fbd) !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
 }
 
-div[data-testid="stFormSubmitButton"] > button:hover {
-    background: linear-gradient(135deg, #174d7d, #266da7);
-    color: white !important;
-    border: none;
-    transform: translateY(-1px);
+div[data-testid="stFormSubmitButton"] button:hover {
+    background: linear-gradient(90deg, #185783, #286da7) !important;
+    color: #ffffff !important;
+    border: none !important;
 }
 
-/* ==============================
-   RESULTS
-============================== */
+/* =========================
+   RESULT
+========================= */
+
 .result-success {
-    background: linear-gradient(135deg, #ecfdf5, #f0fdf4);
-    border: 1px solid #a7f3d0;
+    background: #ecfdf3;
+    border: 1px solid #abefc6;
+    border-radius: 20px;
     padding: 30px;
-    border-radius: 18px;
     text-align: center;
-    margin-top: 16px;
+    margin-top: 8px;
 }
 
 .result-success-title {
-    color: #047857 !important;
-    font-size: 30px;
+    color: #067647 !important;
+    font-size: 31px;
     font-weight: 800;
+    margin: 5px 0;
 }
 
 .result-danger {
-    background: linear-gradient(135deg, #fff1f2, #fef2f2);
-    border: 1px solid #fecaca;
+    background: #fef3f2;
+    border: 1px solid #fecdca;
+    border-radius: 20px;
     padding: 30px;
-    border-radius: 18px;
     text-align: center;
-    margin-top: 16px;
+    margin-top: 8px;
 }
 
 .result-danger-title {
     color: #b42318 !important;
-    font-size: 30px;
+    font-size: 31px;
     font-weight: 800;
+    margin: 5px 0;
 }
 
 .result-text {
-    color: #475569 !important;
+    color: #475467 !important;
     font-size: 15px;
 }
 
-/* ==============================
+/* =========================
    PROBABILITY CARDS
-============================== */
+========================= */
+
 .prob-card {
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    border: 1px solid #e4e8ef;
-    margin-top: 10px;
+    background: #ffffff;
+    border: 1px solid #e1e7ef;
+    border-radius: 17px;
+    padding: 22px;
+    box-shadow: 0 5px 16px rgba(15, 23, 42, 0.04);
 }
 
 .prob-label {
     color: #64748b !important;
     font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 7px;
 }
 
 .prob-value {
     color: #172033 !important;
-    font-size: 28px;
-    font-weight: 750;
+    font-size: 29px;
+    font-weight: 800;
 }
 
-/* ==============================
+/* =========================
    EXPANDER
-============================== */
+========================= */
+
 [data-testid="stExpander"] {
-    background: white;
-    border-radius: 14px;
-    border: 1px solid #e5e9f0;
+    background: #ffffff;
+    border: 1px solid #e1e7ef !important;
+    border-radius: 14px !important;
 }
 
-/* ==============================
+[data-testid="stExpander"] summary {
+    color: #172033 !important;
+}
+
+[data-testid="stExpander"] summary p {
+    color: #172033 !important;
+    font-weight: 650 !important;
+}
+
+/* =========================
+   DATAFRAME
+========================= */
+
+[data-testid="stDataFrame"] {
+    border-radius: 12px;
+}
+
+/* =========================
    FOOTER
-============================== */
+========================= */
+
 .footer {
-    text-align: center;
     color: #94a3b8 !important;
+    text-align: center;
     font-size: 13px;
     padding-top: 35px;
+    padding-bottom: 10px;
 }
-
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True
+)
 
 
 # =========================================================
@@ -238,7 +269,6 @@ div[data-testid="stFormSubmitButton"] > button:hover {
 def load_model():
     model = joblib.load("random_forest_model.pkl")
     scaler_model = joblib.load("scaler.pkl")
-
     return model, scaler_model
 
 
@@ -265,22 +295,19 @@ feature_columns = [
 
 
 # =========================================================
-# HEADER
+# HERO
+# PENTING: HTML dibuat tanpa indentasi di dalam string
 # =========================================================
-st.markdown("""
-<div class="hero">
-
-    <div class="hero-title">
-        🎓 Student Placement Prediction
-    </div>
-
-    <p class="hero-description">
-        Prediksi status penempatan mahasiswa berdasarkan aktivitas
-        akademik menggunakan Random Forest Classifier.
-    </p>
-
-</div>
-""", unsafe_allow_html=True)
+st.markdown(
+    '<div class="hero">'
+    '<div class="hero-title">🎓 Student Placement Prediction</div>'
+    '<div class="hero-description">'
+    'Prediksi status penempatan mahasiswa berdasarkan aktivitas akademik '
+    'menggunakan algoritma Random Forest Classifier.'
+    '</div>'
+    '</div>',
+    unsafe_allow_html=True
+)
 
 
 # =========================================================
@@ -288,71 +315,57 @@ st.markdown("""
 # =========================================================
 card1, card2, card3 = st.columns(3, gap="medium")
 
-with card1:
-    st.markdown("""
-    <div class="info-card">
-        <div class="info-label">
-            🤖 Machine Learning Model
-        </div>
 
-        <div class="info-value">
-            Random Forest
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+with card1:
+    st.markdown(
+        '<div class="info-card">'
+        '<div class="info-label">🤖 Machine Learning Model</div>'
+        '<div class="info-value">Random Forest</div>'
+        '</div>',
+        unsafe_allow_html=True
+    )
 
 
 with card2:
-    st.markdown("""
-    <div class="info-card">
-        <div class="info-label">
-            📊 Input Features
-        </div>
-
-        <div class="info-value">
-            6 Features
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(
+        '<div class="info-card">'
+        '<div class="info-label">📊 Input Features</div>'
+        '<div class="info-value">6 Features</div>'
+        '</div>',
+        unsafe_allow_html=True
+    )
 
 
 with card3:
-    st.markdown("""
-    <div class="info-card">
-        <div class="info-label">
-            🎯 Prediction Target
-        </div>
-
-        <div class="info-value">
-            Placement
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(
+        '<div class="info-card">'
+        '<div class="info-label">🎯 Prediction Target</div>'
+        '<div class="info-value">Placement</div>'
+        '</div>',
+        unsafe_allow_html=True
+    )
 
 
 # =========================================================
-# INPUT SECTION
+# INPUT TITLE
 # =========================================================
-st.markdown("""
-<div class="section-title">
-    📝 Student Information
-</div>
-
-<div class="section-description">
-    Masukkan informasi mahasiswa pada formulir berikut untuk
-    mendapatkan hasil prediksi.
-</div>
-""", unsafe_allow_html=True)
+st.markdown(
+    '<div class="section-title">📝 Student Information</div>'
+    '<div class="section-description">'
+    'Masukkan informasi mahasiswa pada formulir berikut untuk '
+    'mendapatkan hasil prediksi.'
+    '</div>',
+    unsafe_allow_html=True
+)
 
 
+# =========================================================
+# INPUT FORM
+# =========================================================
 with st.form("prediction_form"):
 
     left, right = st.columns(2, gap="large")
 
-
-    # =====================================================
-    # LEFT COLUMN
-    # =====================================================
     with left:
 
         study_hours = st.slider(
@@ -361,7 +374,7 @@ with st.form("prediction_form"):
             max_value=11.0,
             value=6.0,
             step=0.5,
-            help="Rata-rata waktu yang digunakan mahasiswa untuk belajar setiap hari."
+            help="Rata-rata jumlah jam belajar mahasiswa setiap hari."
         )
 
         attendance = st.slider(
@@ -383,9 +396,6 @@ with st.form("prediction_form"):
         )
 
 
-    # =====================================================
-    # RIGHT COLUMN
-    # =====================================================
     with right:
 
         internet_usage = st.slider(
@@ -394,7 +404,7 @@ with st.form("prediction_form"):
             max_value=11.0,
             value=6.0,
             step=0.5,
-            help="Rata-rata waktu penggunaan internet setiap hari."
+            help="Rata-rata penggunaan internet mahasiswa setiap hari."
         )
 
         assignments_completed = st.slider(
@@ -403,7 +413,7 @@ with st.form("prediction_form"):
             max_value=20,
             value=10,
             step=1,
-            help="Jumlah tugas yang berhasil diselesaikan."
+            help="Jumlah tugas yang telah diselesaikan."
         )
 
         previous_score = st.slider(
@@ -416,9 +426,9 @@ with st.form("prediction_form"):
         )
 
 
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.write("")
 
-    predict = st.form_submit_button(
+    predict_button = st.form_submit_button(
         "🔍 Predict Student Placement",
         use_container_width=True
     )
@@ -427,7 +437,7 @@ with st.form("prediction_form"):
 # =========================================================
 # PREDICTION
 # =========================================================
-if predict:
+if predict_button:
 
     input_data = pd.DataFrame(
         [{
@@ -441,7 +451,7 @@ if predict:
     )
 
 
-    # Ensure correct feature order
+    # Menjaga urutan feature agar sama dengan training
     input_data = input_data[feature_columns]
 
 
@@ -462,62 +472,45 @@ if predict:
         prediction = rf_model.predict(input_scaled)
 
 
-        st.markdown("""
-        <div class="section-title">
-            🎯 Prediction Result
-        </div>
-
-        <div class="section-description">
-            Berikut hasil prediksi berdasarkan informasi mahasiswa.
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(
+            '<div class="section-title">🎯 Prediction Result</div>'
+            '<div class="section-description">'
+            'Hasil prediksi berdasarkan data mahasiswa yang telah dimasukkan.'
+            '</div>',
+            unsafe_allow_html=True
+        )
 
 
         # =================================================
-        # RESULT CARD
+        # RESULT
         # =================================================
         if prediction[0] == 1:
 
-            st.markdown("""
-            <div class="result-success">
-
-                <div style="font-size:48px">
-                    🎉
-                </div>
-
-                <div class="result-success-title">
-                    PLACED
-                </div>
-
-                <div class="result-text">
-                    Model memprediksi mahasiswa memiliki
-                    status <b>Placed</b>.
-                </div>
-
-            </div>
-            """, unsafe_allow_html=True)
-
+            st.markdown(
+                '<div class="result-success">'
+                '<div style="font-size:48px;">🎉</div>'
+                '<div class="result-success-title">PLACED</div>'
+                '<div class="result-text">'
+                'Model memprediksi bahwa mahasiswa memiliki '
+                'status <b>Placed</b>.'
+                '</div>'
+                '</div>',
+                unsafe_allow_html=True
+            )
 
         else:
 
-            st.markdown("""
-            <div class="result-danger">
-
-                <div style="font-size:48px">
-                    📌
-                </div>
-
-                <div class="result-danger-title">
-                    NOT PLACED
-                </div>
-
-                <div class="result-text">
-                    Model memprediksi mahasiswa memiliki
-                    status <b>Not Placed</b>.
-                </div>
-
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown(
+                '<div class="result-danger">'
+                '<div style="font-size:48px;">📌</div>'
+                '<div class="result-danger-title">NOT PLACED</div>'
+                '<div class="result-text">'
+                'Model memprediksi bahwa mahasiswa memiliki '
+                'status <b>Not Placed</b>.'
+                '</div>'
+                '</div>',
+                unsafe_allow_html=True
+            )
 
 
         # =================================================
@@ -543,27 +536,21 @@ if predict:
             )
 
 
-            st.markdown("<br>", unsafe_allow_html=True)
+            st.write("")
 
-            probability1, probability2 = st.columns(2)
+            probability1, probability2 = st.columns(
+                2,
+                gap="medium"
+            )
 
 
             with probability1:
 
                 st.markdown(
-                    f"""
-                    <div class="prob-card">
-
-                        <div class="prob-label">
-                            📌 Probability — Not Placed
-                        </div>
-
-                        <div class="prob-value">
-                            {not_placed_probability:.2f}%
-                        </div>
-
-                    </div>
-                    """,
+                    f'<div class="prob-card">'
+                    f'<div class="prob-label">📌 Not Placed Probability</div>'
+                    f'<div class="prob-value">{not_placed_probability:.2f}%</div>'
+                    f'</div>',
                     unsafe_allow_html=True
                 )
 
@@ -571,31 +558,19 @@ if predict:
             with probability2:
 
                 st.markdown(
-                    f"""
-                    <div class="prob-card">
-
-                        <div class="prob-label">
-                            🎓 Probability — Placed
-                        </div>
-
-                        <div class="prob-value">
-                            {placed_probability:.2f}%
-                        </div>
-
-                    </div>
-                    """,
+                    f'<div class="prob-card">'
+                    f'<div class="prob-label">🎓 Placed Probability</div>'
+                    f'<div class="prob-value">{placed_probability:.2f}%</div>'
+                    f'</div>',
                     unsafe_allow_html=True
                 )
 
 
-            st.markdown("<br>", unsafe_allow_html=True)
+            st.write("")
 
             st.progress(
-                placed_probability / 100,
-                text=(
-                    f"Placement Probability "
-                    f"{placed_probability:.2f}%"
-                )
+                float(placed_probability / 100),
+                text=f"Placement Probability: {placed_probability:.2f}%"
             )
 
 
@@ -607,27 +582,27 @@ if predict:
             expanded=False
         ):
 
-            summary = pd.DataFrame({
+            summary = pd.DataFrame(
+                {
+                    "Feature": [
+                        "Study Hours",
+                        "Attendance",
+                        "Sleep Hours",
+                        "Internet Usage",
+                        "Assignments Completed",
+                        "Previous Score"
+                    ],
 
-                "Feature": [
-                    "Study Hours",
-                    "Attendance",
-                    "Sleep Hours",
-                    "Internet Usage",
-                    "Assignments Completed",
-                    "Previous Score"
-                ],
-
-                "Value": [
-                    f"{study_hours} jam",
-                    f"{attendance:.0f}%",
-                    f"{sleep_hours} jam",
-                    f"{internet_usage} jam",
-                    assignments_completed,
-                    previous_score
-                ]
-
-            })
+                    "Value": [
+                        f"{study_hours} jam",
+                        f"{attendance:.0f}%",
+                        f"{sleep_hours} jam",
+                        f"{internet_usage} jam",
+                        assignments_completed,
+                        previous_score
+                    ]
+                }
+            )
 
 
             st.dataframe(
@@ -647,9 +622,9 @@ if predict:
 
 
 # =========================================================
-# ABOUT APPLICATION
+# ABOUT
 # =========================================================
-st.markdown("<br>", unsafe_allow_html=True)
+st.write("")
 
 
 with st.expander(
@@ -657,33 +632,32 @@ with st.expander(
     expanded=False
 ):
 
-    st.markdown("""
-    Aplikasi **Student Placement Prediction** merupakan
-    implementasi Machine Learning menggunakan algoritma
-    **Random Forest Classifier**.
+    st.markdown(
+        """
+Aplikasi **Student Placement Prediction** menggunakan algoritma
+**Random Forest Classifier** untuk memprediksi status penempatan mahasiswa.
 
-    Prediksi dilakukan berdasarkan enam variabel:
+Variabel yang digunakan:
 
-    - 📚 Study Hours
-    - 🏫 Attendance
-    - 😴 Sleep Hours
-    - 🌐 Internet Usage
-    - ✅ Assignments Completed
-    - 📈 Previous Score
+- 📚 Study Hours
+- 🏫 Attendance
+- 😴 Sleep Hours
+- 🌐 Internet Usage
+- ✅ Assignments Completed
+- 📈 Previous Score
 
-    Sebelum data digunakan oleh model Random Forest,
-    data akan melalui proses **scaling** menggunakan scaler
-    yang dibuat pada tahap pelatihan model.
-    """)
+Sebelum dilakukan prediksi, data input diproses menggunakan scaler
+yang sama dengan scaler pada tahap pelatihan model.
+        """
+    )
 
 
 # =========================================================
 # FOOTER
 # =========================================================
-st.markdown("""
-<div class="footer">
-    🎓 Student Placement Prediction
-    &nbsp;•&nbsp;
-    Machine Learning Project
-</div>
-""", unsafe_allow_html=True)
+st.markdown(
+    '<div class="footer">'
+    '🎓 Student Placement Prediction &nbsp;•&nbsp; Machine Learning Project'
+    '</div>',
+    unsafe_allow_html=True
+)
