@@ -2,9 +2,9 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# ============================================================
+# =========================================================
 # PAGE CONFIG
-# ============================================================
+# =========================================================
 st.set_page_config(
     page_title="Student Placement Prediction",
     page_icon="🎓",
@@ -12,136 +12,248 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# ============================================================
+# =========================================================
 # CUSTOM CSS
-# ============================================================
-st.markdown(
-    """
-    <style>
-        .stApp {
-            background-color: #f7f9fc;
-        }
+# =========================================================
+st.markdown("""
+<style>
 
-        .block-container {
-            max-width: 1100px;
-            padding-top: 2rem;
-            padding-bottom: 3rem;
-        }
+/* ==============================
+   GLOBAL
+============================== */
+.stApp {
+    background: #f5f7fb;
+}
 
-        .hero {
-            padding: 32px 36px;
-            border-radius: 22px;
-            background: linear-gradient(135deg, #1f4e78 0%, #326fa8 100%);
-            color: white;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-        }
+.block-container {
+    max-width: 1120px;
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+}
 
-        .hero h1 {
-            font-size: 36px;
-            margin: 0 0 8px 0;
-            font-weight: 700;
-        }
+/* ==============================
+   HEADER
+============================== */
+.hero {
+    background: linear-gradient(135deg, #1e4f7a, #3479b9);
+    padding: 34px 40px;
+    border-radius: 0 0 24px 24px;
+    margin-bottom: 28px;
+    box-shadow: 0 12px 30px rgba(30, 79, 122, 0.15);
+}
 
-        .hero p {
-            margin: 0;
-            font-size: 16px;
-            opacity: 0.9;
-        }
+.hero-title {
+    color: white !important;
+    font-size: 38px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
 
-        .section-title {
-            font-size: 22px;
-            font-weight: 700;
-            margin-top: 10px;
-            margin-bottom: 4px;
-            color: #1f2937;
-        }
+.hero-description {
+    color: #eaf4ff !important;
+    font-size: 16px;
+    margin: 0;
+}
 
-        .section-desc {
-            color: #6b7280;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
+/* ==============================
+   INFORMATION CARDS
+============================== */
+.info-card {
+    background: white;
+    padding: 22px 24px;
+    border-radius: 16px;
+    border: 1px solid #e4e8ef;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.045);
+    min-height: 115px;
+}
 
-        [data-testid="stMetric"] {
-            background-color: white;
-            padding: 18px;
-            border-radius: 16px;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
-        }
+.info-label {
+    font-size: 14px;
+    color: #64748b !important;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
 
-        div.stButton > button,
-        div[data-testid="stFormSubmitButton"] > button {
-            width: 100%;
-            border-radius: 12px;
-            height: 48px;
-            font-size: 16px;
-            font-weight: 600;
-        }
+.info-value {
+    font-size: 27px;
+    color: #172033 !important;
+    font-weight: 700;
+}
 
-        .result-success {
-            background: #ecfdf5;
-            border: 1px solid #a7f3d0;
-            padding: 28px;
-            border-radius: 18px;
-            text-align: center;
-            margin-top: 15px;
-        }
+/* ==============================
+   SECTION
+============================== */
+.section-title {
+    color: #172033 !important;
+    font-size: 24px;
+    font-weight: 750;
+    margin-top: 22px;
+    margin-bottom: 4px;
+}
 
-        .result-success h2 {
-            color: #047857;
-            margin: 5px 0;
-        }
+.section-description {
+    color: #697386 !important;
+    font-size: 15px;
+    margin-bottom: 22px;
+}
 
-        .result-danger {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            padding: 28px;
-            border-radius: 18px;
-            text-align: center;
-            margin-top: 15px;
-        }
+/* ==============================
+   WIDGET LABEL
+============================== */
+label[data-testid="stWidgetLabel"] p {
+    color: #253247 !important;
+    font-weight: 650 !important;
+    font-size: 15px !important;
+}
 
-        .result-danger h2 {
-            color: #b91c1c;
-            margin: 5px 0;
-        }
+[data-testid="stSlider"] p {
+    color: #253247 !important;
+}
 
-        .footer {
-            text-align: center;
-            color: #9ca3af;
-            margin-top: 45px;
-            font-size: 13px;
-        }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+/* Slider value */
+[data-testid="stSlider"] [data-testid="stThumbValue"] {
+    color: #2468a2 !important;
+}
 
-# ============================================================
+/* ==============================
+   INPUT CONTAINER
+============================== */
+[data-testid="stForm"] {
+    background: white;
+    padding: 26px 28px;
+    border-radius: 20px;
+    border: 1px solid #e3e8ef;
+    box-shadow: 0 7px 22px rgba(0, 0, 0, 0.045);
+}
+
+/* ==============================
+   BUTTON
+============================== */
+div[data-testid="stFormSubmitButton"] > button {
+    width: 100%;
+    min-height: 52px;
+    background: linear-gradient(135deg, #1e5f99, #2e7dbe);
+    color: white !important;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    transition: 0.2s;
+}
+
+div[data-testid="stFormSubmitButton"] > button:hover {
+    background: linear-gradient(135deg, #174d7d, #266da7);
+    color: white !important;
+    border: none;
+    transform: translateY(-1px);
+}
+
+/* ==============================
+   RESULTS
+============================== */
+.result-success {
+    background: linear-gradient(135deg, #ecfdf5, #f0fdf4);
+    border: 1px solid #a7f3d0;
+    padding: 30px;
+    border-radius: 18px;
+    text-align: center;
+    margin-top: 16px;
+}
+
+.result-success-title {
+    color: #047857 !important;
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.result-danger {
+    background: linear-gradient(135deg, #fff1f2, #fef2f2);
+    border: 1px solid #fecaca;
+    padding: 30px;
+    border-radius: 18px;
+    text-align: center;
+    margin-top: 16px;
+}
+
+.result-danger-title {
+    color: #b42318 !important;
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.result-text {
+    color: #475569 !important;
+    font-size: 15px;
+}
+
+/* ==============================
+   PROBABILITY CARDS
+============================== */
+.prob-card {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid #e4e8ef;
+    margin-top: 10px;
+}
+
+.prob-label {
+    color: #64748b !important;
+    font-size: 14px;
+}
+
+.prob-value {
+    color: #172033 !important;
+    font-size: 28px;
+    font-weight: 750;
+}
+
+/* ==============================
+   EXPANDER
+============================== */
+[data-testid="stExpander"] {
+    background: white;
+    border-radius: 14px;
+    border: 1px solid #e5e9f0;
+}
+
+/* ==============================
+   FOOTER
+============================== */
+.footer {
+    text-align: center;
+    color: #94a3b8 !important;
+    font-size: 13px;
+    padding-top: 35px;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+
+# =========================================================
 # LOAD MODEL
-# ============================================================
+# =========================================================
 @st.cache_resource
-def load_models():
+def load_model():
     model = joblib.load("random_forest_model.pkl")
     scaler_model = joblib.load("scaler.pkl")
+
     return model, scaler_model
 
 
 try:
-    rf_model, scaler = load_models()
+    rf_model, scaler = load_model()
 
 except Exception as e:
-    st.error("Model gagal dimuat.")
+    st.error("Model atau scaler gagal dimuat.")
     st.exception(e)
     st.stop()
 
 
-# ============================================================
+# =========================================================
 # FEATURE COLUMNS
-# ============================================================
-# placement_status TIDAK dimasukkan karena merupakan target.
+# =========================================================
 feature_columns = [
     "study_hours",
     "attendance",
@@ -152,78 +264,104 @@ feature_columns = [
 ]
 
 
-# ============================================================
+# =========================================================
 # HEADER
-# ============================================================
-st.markdown(
-    """
-    <div class="hero">
-        <h1>🎓 Student Placement Prediction</h1>
-        <p>
-            Sistem prediksi peluang penempatan mahasiswa menggunakan
-            algoritma Random Forest Classifier.
-        </p>
+# =========================================================
+st.markdown("""
+<div class="hero">
+
+    <div class="hero-title">
+        🎓 Student Placement Prediction
     </div>
-    """,
-    unsafe_allow_html=True
-)
+
+    <p class="hero-description">
+        Prediksi status penempatan mahasiswa berdasarkan aktivitas
+        akademik menggunakan Random Forest Classifier.
+    </p>
+
+</div>
+""", unsafe_allow_html=True)
 
 
-# ============================================================
-# INFORMATION
-# ============================================================
-metric1, metric2, metric3 = st.columns(3)
+# =========================================================
+# INFORMATION CARDS
+# =========================================================
+card1, card2, card3 = st.columns(3, gap="medium")
 
-with metric1:
-    st.metric(
-        label="🤖 Model",
-        value="Random Forest"
-    )
+with card1:
+    st.markdown("""
+    <div class="info-card">
+        <div class="info-label">
+            🤖 Machine Learning Model
+        </div>
 
-with metric2:
-    st.metric(
-        label="📊 Jumlah Fitur",
-        value="6 Features"
-    )
-
-with metric3:
-    st.metric(
-        label="🎯 Output",
-        value="Placement"
-    )
-
-
-st.markdown("<br>", unsafe_allow_html=True)
-
-st.markdown(
-    """
-    <div class="section-title">
-        📝 Student Information
+        <div class="info-value">
+            Random Forest
+        </div>
     </div>
-    <div class="section-desc">
-        Masukkan informasi akademik dan aktivitas mahasiswa untuk melakukan prediksi.
+    """, unsafe_allow_html=True)
+
+
+with card2:
+    st.markdown("""
+    <div class="info-card">
+        <div class="info-label">
+            📊 Input Features
+        </div>
+
+        <div class="info-value">
+            6 Features
+        </div>
     </div>
-    """,
-    unsafe_allow_html=True
-)
+    """, unsafe_allow_html=True)
 
 
-# ============================================================
-# INPUT FORM
-# ============================================================
+with card3:
+    st.markdown("""
+    <div class="info-card">
+        <div class="info-label">
+            🎯 Prediction Target
+        </div>
+
+        <div class="info-value">
+            Placement
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+# =========================================================
+# INPUT SECTION
+# =========================================================
+st.markdown("""
+<div class="section-title">
+    📝 Student Information
+</div>
+
+<div class="section-description">
+    Masukkan informasi mahasiswa pada formulir berikut untuk
+    mendapatkan hasil prediksi.
+</div>
+""", unsafe_allow_html=True)
+
+
 with st.form("prediction_form"):
 
-    col1, col2 = st.columns(2, gap="large")
+    left, right = st.columns(2, gap="large")
 
-    with col1:
+
+    # =====================================================
+    # LEFT COLUMN
+    # =====================================================
+    with left:
 
         study_hours = st.slider(
-            "📚 Study Hours",
+            "📚 Study Hours (jam/hari)",
             min_value=1.0,
             max_value=11.0,
             value=6.0,
             step=0.5,
-            help="Jumlah jam belajar mahasiswa."
+            help="Rata-rata waktu yang digunakan mahasiswa untuk belajar setiap hari."
         )
 
         attendance = st.slider(
@@ -236,24 +374,27 @@ with st.form("prediction_form"):
         )
 
         sleep_hours = st.slider(
-            "😴 Sleep Hours",
+            "😴 Sleep Hours (jam/hari)",
             min_value=4.0,
             max_value=9.0,
             value=7.0,
             step=0.5,
-            help="Rata-rata jumlah jam tidur."
+            help="Rata-rata durasi tidur mahasiswa setiap hari."
         )
 
 
-    with col2:
+    # =====================================================
+    # RIGHT COLUMN
+    # =====================================================
+    with right:
 
         internet_usage = st.slider(
-            "🌐 Internet Usage",
+            "🌐 Internet Usage (jam/hari)",
             min_value=1.0,
             max_value=11.0,
             value=6.0,
             step=0.5,
-            help="Rata-rata penggunaan internet per hari."
+            help="Rata-rata waktu penggunaan internet setiap hari."
         )
 
         assignments_completed = st.slider(
@@ -271,167 +412,226 @@ with st.form("prediction_form"):
             max_value=95.0,
             value=65.0,
             step=1.0,
-            help="Nilai akademik sebelumnya."
+            help="Nilai akademik mahasiswa sebelumnya."
         )
 
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    predict_button = st.form_submit_button(
+    predict = st.form_submit_button(
         "🔍 Predict Student Placement",
         use_container_width=True
     )
 
 
-# ============================================================
+# =========================================================
 # PREDICTION
-# ============================================================
-if predict_button:
+# =========================================================
+if predict:
 
-    # Membentuk DataFrame input
     input_data = pd.DataFrame(
-        [
-            {
-                "study_hours": study_hours,
-                "attendance": attendance,
-                "sleep_hours": sleep_hours,
-                "internet_usage": internet_usage,
-                "assignments_completed": assignments_completed,
-                "previous_score": previous_score,
-            }
-        ]
+        [{
+            "study_hours": study_hours,
+            "attendance": attendance,
+            "sleep_hours": sleep_hours,
+            "internet_usage": internet_usage,
+            "assignments_completed": assignments_completed,
+            "previous_score": previous_score
+        }]
     )
 
-    # Memastikan urutan fitur sama seperti data training
+
+    # Ensure correct feature order
     input_data = input_data[feature_columns]
+
 
     try:
 
-        # Scaling
+        # =================================================
+        # SCALING
+        # =================================================
         input_scaled = pd.DataFrame(
             scaler.transform(input_data),
             columns=feature_columns
         )
 
-        # Prediction
+
+        # =================================================
+        # PREDICTION
+        # =================================================
         prediction = rf_model.predict(input_scaled)
 
-        # ====================================================
-        # RESULT SECTION
-        # ====================================================
-        st.markdown("<br>", unsafe_allow_html=True)
 
-        st.markdown(
-            """
-            <div class="section-title">
-                🎯 Prediction Result
-            </div>
-            <div class="section-desc">
-                Hasil prediksi berdasarkan data mahasiswa yang dimasukkan.
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+        st.markdown("""
+        <div class="section-title">
+            🎯 Prediction Result
+        </div>
+
+        <div class="section-description">
+            Berikut hasil prediksi berdasarkan informasi mahasiswa.
+        </div>
+        """, unsafe_allow_html=True)
 
 
-        # Prediction probability
-        probability = None
-
-        if hasattr(rf_model, "predict_proba"):
-            probability = rf_model.predict_proba(input_scaled)
-
-
+        # =================================================
+        # RESULT CARD
+        # =================================================
         if prediction[0] == 1:
 
-            st.markdown(
-                """
-                <div class="result-success">
-                    <div style="font-size:45px;">🎉</div>
-                    <h2>PLACED</h2>
-                    <p>
-                        Model memprediksi bahwa mahasiswa memiliki
-                        status <b>Placed</b>.
-                    </p>
+            st.markdown("""
+            <div class="result-success">
+
+                <div style="font-size:48px">
+                    🎉
                 </div>
-                """,
-                unsafe_allow_html=True
-            )
+
+                <div class="result-success-title">
+                    PLACED
+                </div>
+
+                <div class="result-text">
+                    Model memprediksi mahasiswa memiliki
+                    status <b>Placed</b>.
+                </div>
+
+            </div>
+            """, unsafe_allow_html=True)
+
 
         else:
 
-            st.markdown(
-                """
-                <div class="result-danger">
-                    <div style="font-size:45px;">📌</div>
-                    <h2>NOT PLACED</h2>
-                    <p>
-                        Model memprediksi bahwa mahasiswa memiliki
-                        status <b>Not Placed</b>.
-                    </p>
+            st.markdown("""
+            <div class="result-danger">
+
+                <div style="font-size:48px">
+                    📌
                 </div>
-                """,
-                unsafe_allow_html=True
+
+                <div class="result-danger-title">
+                    NOT PLACED
+                </div>
+
+                <div class="result-text">
+                    Model memprediksi mahasiswa memiliki
+                    status <b>Not Placed</b>.
+                </div>
+
+            </div>
+            """, unsafe_allow_html=True)
+
+
+        # =================================================
+        # PREDICTION PROBABILITY
+        # =================================================
+        if hasattr(rf_model, "predict_proba"):
+
+            probabilities = rf_model.predict_proba(input_scaled)[0]
+
+            class_probability = dict(
+                zip(
+                    rf_model.classes_,
+                    probabilities
+                )
             )
 
+            not_placed_probability = (
+                class_probability.get(0, 0) * 100
+            )
 
-        # ====================================================
-        # PROBABILITY
-        # ====================================================
-        if probability is not None:
+            placed_probability = (
+                class_probability.get(1, 0) * 100
+            )
+
 
             st.markdown("<br>", unsafe_allow_html=True)
 
-            prob_col1, prob_col2 = st.columns(2)
+            probability1, probability2 = st.columns(2)
 
-            not_placed_probability = probability[0][0] * 100
-            placed_probability = probability[0][1] * 100
 
-            with prob_col1:
-                st.metric(
-                    "Probability - Not Placed",
-                    f"{not_placed_probability:.2f}%"
+            with probability1:
+
+                st.markdown(
+                    f"""
+                    <div class="prob-card">
+
+                        <div class="prob-label">
+                            📌 Probability — Not Placed
+                        </div>
+
+                        <div class="prob-value">
+                            {not_placed_probability:.2f}%
+                        </div>
+
+                    </div>
+                    """,
+                    unsafe_allow_html=True
                 )
 
-            with prob_col2:
-                st.metric(
-                    "Probability - Placed",
-                    f"{placed_probability:.2f}%"
+
+            with probability2:
+
+                st.markdown(
+                    f"""
+                    <div class="prob-card">
+
+                        <div class="prob-label">
+                            🎓 Probability — Placed
+                        </div>
+
+                        <div class="prob-value">
+                            {placed_probability:.2f}%
+                        </div>
+
+                    </div>
+                    """,
+                    unsafe_allow_html=True
                 )
+
+
+            st.markdown("<br>", unsafe_allow_html=True)
 
             st.progress(
-                int(placed_probability),
-                text=f"Placement Probability: {placed_probability:.2f}%"
+                placed_probability / 100,
+                text=(
+                    f"Placement Probability "
+                    f"{placed_probability:.2f}%"
+                )
             )
 
 
-        # ====================================================
+        # =================================================
         # INPUT SUMMARY
-        # ====================================================
-        with st.expander("📋 Lihat Data Input"):
+        # =================================================
+        with st.expander(
+            "📋 Lihat Detail Data Input",
+            expanded=False
+        ):
 
-            display_data = pd.DataFrame(
-                {
-                    "Feature": [
-                        "Study Hours",
-                        "Attendance",
-                        "Sleep Hours",
-                        "Internet Usage",
-                        "Assignments Completed",
-                        "Previous Score"
-                    ],
-                    "Value": [
-                        study_hours,
-                        f"{attendance}%",
-                        sleep_hours,
-                        internet_usage,
-                        assignments_completed,
-                        previous_score
-                    ]
-                }
-            )
+            summary = pd.DataFrame({
+
+                "Feature": [
+                    "Study Hours",
+                    "Attendance",
+                    "Sleep Hours",
+                    "Internet Usage",
+                    "Assignments Completed",
+                    "Previous Score"
+                ],
+
+                "Value": [
+                    f"{study_hours} jam",
+                    f"{attendance:.0f}%",
+                    f"{sleep_hours} jam",
+                    f"{internet_usage} jam",
+                    assignments_completed,
+                    previous_score
+                ]
+
+            })
+
 
             st.dataframe(
-                display_data,
+                summary,
                 use_container_width=True,
                 hide_index=True
             )
@@ -440,47 +640,50 @@ if predict_button:
     except Exception as e:
 
         st.error(
-            "Terjadi kesalahan ketika melakukan prediksi."
+            "Terjadi kesalahan saat melakukan prediksi."
         )
 
         st.exception(e)
 
 
-# ============================================================
-# MODEL INFORMATION
-# ============================================================
+# =========================================================
+# ABOUT APPLICATION
+# =========================================================
 st.markdown("<br>", unsafe_allow_html=True)
 
-with st.expander("ℹ️ Tentang Aplikasi"):
 
-    st.write(
-        """
-        Aplikasi ini menggunakan **Random Forest Classifier**
-        untuk memprediksi status penempatan mahasiswa berdasarkan
-        enam variabel:
-        
-        - Study Hours
-        - Attendance
-        - Sleep Hours
-        - Internet Usage
-        - Assignments Completed
-        - Previous Score
-        
-        Data input akan melalui proses scaling menggunakan scaler
-        yang telah dibuat pada tahap training sebelum digunakan
-        oleh model Random Forest.
-        """
-    )
+with st.expander(
+    "ℹ️ Tentang Sistem Prediksi",
+    expanded=False
+):
+
+    st.markdown("""
+    Aplikasi **Student Placement Prediction** merupakan
+    implementasi Machine Learning menggunakan algoritma
+    **Random Forest Classifier**.
+
+    Prediksi dilakukan berdasarkan enam variabel:
+
+    - 📚 Study Hours
+    - 🏫 Attendance
+    - 😴 Sleep Hours
+    - 🌐 Internet Usage
+    - ✅ Assignments Completed
+    - 📈 Previous Score
+
+    Sebelum data digunakan oleh model Random Forest,
+    data akan melalui proses **scaling** menggunakan scaler
+    yang dibuat pada tahap pelatihan model.
+    """)
 
 
-# ============================================================
+# =========================================================
 # FOOTER
-# ============================================================
-st.markdown(
-    """
-    <div class="footer">
-        Student Placement Prediction • Machine Learning Project
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+# =========================================================
+st.markdown("""
+<div class="footer">
+    🎓 Student Placement Prediction
+    &nbsp;•&nbsp;
+    Machine Learning Project
+</div>
+""", unsafe_allow_html=True)
